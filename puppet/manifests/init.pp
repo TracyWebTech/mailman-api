@@ -1,0 +1,4 @@
+
+package { 'mailman':
+  ensure => installed,
+}
