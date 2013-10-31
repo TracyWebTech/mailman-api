@@ -12,4 +12,8 @@ fi
 
 cp /vagrant/puppet/hiera.yaml /etc/puppet/hiera.yaml -f
 
+# TODO make a generic function to help verify if it's already installed
+sudo puppet module install saz-timezone --version 1.1.0 --force
+sudo puppet module install seocam-supervisor --version 0.0.1 --force
+
 update-locale LC_ALL=''

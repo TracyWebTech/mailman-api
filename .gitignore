@@ -1,6 +1,4 @@
 .vagrant/
-
-.pyc
-.pyo
-
-.swp
+*.pyc
+*.pyo
+*.swp
