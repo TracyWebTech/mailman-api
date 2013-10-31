@@ -1,12 +1,16 @@
 
-import sys
-sys.path.append('/usr/lib/mailman')
+import os
+import uuid
 
-from bottle import route, run, request
-from Mailman import Utils, Errors
+from bottle import route, request, template
+from Mailman import Utils, Errors, Post, mm_cfg
 
 from members import Member
-from utils import parse_boolean, jsonify, get_mailinglist
+from utils import parse_boolean, jsonify, get_mailinglist, get_timestamp
+
+
+CWD = os.path.abspath(os.path.dirname(__file__))
+EMAIL_TEMPLATE = os.path.join(CWD, 'templates', 'message.tpl')
 
 
 @route('/', method='GET')
@@ -75,4 +79,25 @@ def members(listname):
     return jsonify(mlist.getMembers())
 
 
-run(host='0.0.0.0', port=8000, debug=True, reloader=True)
+@route('/<listname>/sendmail', method='POST')
+def sendmail(listname):
+    mlist = get_mailinglist(listname, lock=False)
+
+    context = {}
+    context['email_to'] = mlist.GetListEmail()
+    context['message_id'] = uuid.uuid1()
+    context['ip_from'] = request.environ.get('REMOTE_ADDR')
+    context['timestamp'] = get_timestamp()
+
+    context['email_from'] = request.forms.get('from')
+    context['subject'] = request.forms.get('subject')
+    context['body'] = request.forms.get('body')
+
+    if None in context.values():
+        return jsonify('Missing information. `from`, `subject` and `body` '
+                       'are mandatory', 400)
+
+    email = template(EMAIL_TEMPLATE, context)
+    Post.inject(listname, email.encode('utf8'), mm_cfg.INQUEUE_DIR)
+    return jsonify(True)
+

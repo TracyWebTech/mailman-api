@@ -1,7 +1,8 @@
 
 import simplejson
-from bottle import HTTPResponse
 
+from time import strftime
+from bottle import HTTPResponse
 from Mailman import MailList, Errors
 
 
@@ -24,3 +25,8 @@ def get_mailinglist(listname, lock=True):
         return MailList.MailList(listname, lock=lock)
     except Errors.MMUnknownListError:
         raise jsonify("Unknown Mailing List `{}`.".format(listname), 404)
+
+
+def get_timestamp():
+    return strftime('%a, %d %b %Y %H:%M:%S %z (%Z)')
+
