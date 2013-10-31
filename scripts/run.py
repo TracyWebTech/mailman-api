@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
+import os
+CWD = os.path.abspath(os.path.dirname(__file__))
+
 import sys
 sys.path.append('/usr/lib/mailman')
-sys.path.append('..')
+sys.path.append(os.path.abspath(os.path.join(CWD, '..')))
 
 
 import bottle
