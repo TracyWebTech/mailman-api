@@ -44,7 +44,7 @@ def subscribe(listname):
         mlist.ApprovedAddMember(userdesc, ack=True, admin_notif=True)
     except Errors.MMAlreadyAMember:
         return jsonify("Address already a member.", 409)
-    except Errors.MembershipIsBanned as pattern:
+    except Errors.MembershipIsBanned:
         return jsonify("Banned address.", 403)
     except (Errors.MMBadEmailError, Errors.MMHostileAddress):
         return jsonify("Invalid address.", 400)
