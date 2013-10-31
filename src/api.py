@@ -2,100 +2,77 @@
 import sys
 sys.path.append('/usr/lib/mailman')
 
-import simplejson
-from bottle import route, run, request, HTTPResponse
-from Mailman import Utils, Errors, MailList
+from bottle import route, run, request
+from Mailman import Utils, Errors
 
 from members import Member
-from utils import parse_boolean
+from utils import parse_boolean, jsonify, get_mailinglist
 
 
 @route('/', method='GET')
 def list_lists():
-    response = HTTPResponse(content_type='application/json')
+    all_lists = Utils.list_names()
+    lists = []
 
-    names = Utils.list_names()
-    names.sort()
+    address = request.query.get('address')
+    if address:
+        for listname in all_lists:
+            mlist = get_mailinglist(listname, lock=False)
+            members = mlist.getMembers()
+            if address in members:
+                lists.append(listname)
+    else:
+        lists = all_lists
 
-    response.body = simplejson.dumps(names)
-    return response
+    return jsonify(lists)
 
 
 @route('/<listname>', method='PUT')
 def subscribe(listname):
-    response = HTTPResponse(content_type='application/json')
-
     address = request.forms.get('address')
     fullname = request.forms.get('fullname')
     digest = parse_boolean(request.forms.get('digest'))
 
-    try:
-        mlist = MailList.MailList(listname)
-    except Errors.MMUnknownListError:
-        response.status = 404
-        response.body = "Unknown Mailing List `{}`.".format(listname)
-        return response
-
+    mlist = get_mailinglist(listname)
     userdesc = Member(fullname, address, digest)
+
     try:
         mlist.ApprovedAddMember(userdesc, ack=True, admin_notif=True)
     except Errors.MMAlreadyAMember:
-        response.status = 409
-        response.body = "Address already a member."
+        return jsonify("Address already a member.", 409)
     except Errors.MembershipIsBanned as pattern:
-        response.status = 403
-        response.body = "Banned address."
+        return jsonify("Banned address.", 403)
     except (Errors.MMBadEmailError, Errors.MMHostileAddress):
-        response.status = 400
-        response.body = "Invalid address."
+        return jsonify("Invalid address.", 400)
+
     else:
         mlist.Save()
-        response.body = simplejson.dumps(True)
     finally:
         mlist.Unlock()
 
-    return response
+    return jsonify(True)
 
 
 @route('/<listname>', method='DELETE')
 def unsubscribe(listname):
-    response = HTTPResponse(content_type='application/json')
     address = request.forms.get('address')
-
-    try:
-        mlist = MailList.MailList(listname)
-    except Errors.MMUnknownListError:
-        response.status = 404
-        response.body = "Unknown Mailing List `{}`.".format(listname)
-        return response
+    mlist = get_mailinglist(listname)
 
     try:
         mlist.ApprovedDeleteMember(address, admin_notif=False, userack=True)
         mlist.Save()
     except Errors.NotAMemberError:
-        response.status = 404
-        response.body = "Not a member"
+        return jsonify("Not a member.", 404)
     finally:
         mlist.Unlock()
 
-    response.body = 'true'
-
-    return response
+    return jsonify(True)
 
 
 @route('/<listname>', method='GET')
 def members(listname):
-    response = HTTPResponse(content_type='application/json')
-
-    try:
-        mlist = MailList.MailList(listname, lock=False)
-    except Errors.MMUnknownListError:
-        response.status = 404
-        response.body = "Unknown Mailing List `{}`.".format(listname)
-        return response
-
-    response.body = simplejson.dumps(mlist.getMembers())
-    return response
+    mlist = get_mailinglist(listname, lock=False)
+    return jsonify(mlist.getMembers())
 
 
 run(host='0.0.0.0', port=8000, debug=True, reloader=True)
