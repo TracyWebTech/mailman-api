@@ -95,8 +95,8 @@ def sendmail(listname):
     context['body'] = request.forms.get('body')
 
     if None in context.values():
-        return jsonify('Missing information. `from`, `subject` and `body` '
-                       'are mandatory', 400)
+        return jsonify('Missing information. `email_from`, `subject` and '
+                       '`body` are mandatory', 400)
 
     email = template(EMAIL_TEMPLATE, context)
     Post.inject(listname, email.encode('utf8'), mm_cfg.INQUEUE_DIR)
