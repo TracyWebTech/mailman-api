@@ -99,6 +99,6 @@ def sendmail(listname):
                        '`body` are mandatory', 400)
 
     email = template(EMAIL_TEMPLATE, context)
-    Post.inject(listname, email.encode('utf8'), mm_cfg.INQUEUE_DIR)
+    Post.inject(listname, email.encode('utf8'), qdir=mm_cfg.INQUEUE_DIR)
     return jsonify(True)
 
