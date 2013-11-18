@@ -1,4 +1,4 @@
-From: {{email_from}}
+From: {{name_from}} <{{email_from}}>
 To: {{email_to}}
 Subject: {{subject}}
 Message-ID: {{message_id}}

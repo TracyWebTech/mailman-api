@@ -89,7 +89,8 @@ def sendmail(listname):
     context['ip_from'] = request.environ.get('REMOTE_ADDR')
     context['timestamp'] = get_timestamp()
 
-    context['email_from'] = request.forms.get('from')
+    context['name_from'] = request.forms.get('name_from')
+    context['email_from'] = request.forms.get('email_from')
     context['subject'] = request.forms.get('subject')
     context['body'] = request.forms.get('body')
 
