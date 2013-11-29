@@ -94,6 +94,10 @@ def sendmail(listname):
     context['subject'] = request.forms.get('subject')
     context['body'] = request.forms.get('body')
 
+    in_reply_to = request.forms.get('in_reply_to')
+    if in_reply_to:
+        context['in_reply_to'] = in_reply_to
+
     if None in context.values():
         return jsonify('Missing information. `email_from`, `subject` and '
                        '`body` are mandatory', 400)
