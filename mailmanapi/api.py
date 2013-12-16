@@ -26,7 +26,7 @@ def list_lists():
         members = mlist.getMembers()
         if not address or address in members:
             if include_description:
-                lists.append((listname, mlist.description))
+                lists.append((listname, mlist.description.decode('latin1')))
             else:
                 lists.append(listname)
 
