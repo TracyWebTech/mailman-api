@@ -21,17 +21,14 @@ def list_lists():
     include_description = request.query.get('description')
 
     address = request.query.get('address')
-    if address:
-        for listname in all_lists:
-            mlist = get_mailinglist(listname, lock=False)
-            members = mlist.getMembers()
-            if address in members:
-                if include_description:
-                    lists.append((listname, mlist.description))
-                else:
-                    lists.append(listname)
-    else:
-        lists = all_lists
+    for listname in all_lists:
+        mlist = get_mailinglist(listname, lock=False)
+        members = mlist.getMembers()
+        if not address or address in members:
+            if include_description:
+                lists.append((listname, mlist.description))
+            else:
+                lists.append(listname)
 
     return jsonify(lists)
 
