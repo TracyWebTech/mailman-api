@@ -18,13 +18,18 @@ def list_lists():
     all_lists = Utils.list_names()
     lists = []
 
+    include_description = request.query.get('description')
+
     address = request.query.get('address')
     if address:
         for listname in all_lists:
             mlist = get_mailinglist(listname, lock=False)
             members = mlist.getMembers()
             if address in members:
-                lists.append(listname)
+                if include_description:
+                    lists.append((listname, mlist.description))
+                else:
+                    lists.append(listname)
     else:
         lists = all_lists
 
