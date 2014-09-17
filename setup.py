@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='mailman-api',
-    version='0.1.0',
+    version='0.2.0',
     author='Sergio Oliveira',
     author_email='sergio@tracy.com.br',
     packages=['mailmanapi'],
