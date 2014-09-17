@@ -1,2 +1,0 @@
-
-ALLOWED_IPS = []

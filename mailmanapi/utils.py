@@ -1,5 +1,5 @@
 
-import simplejson
+import json
 
 from time import strftime
 from bottle import HTTPResponse
@@ -15,7 +15,7 @@ def parse_boolean(value):
 
 def jsonify(body='', status=200):
     response = HTTPResponse(content_type='application/json')
-    response.body = simplejson.dumps(body)
+    response.body = json.dumps(body)
     response.status = status
     return response
 

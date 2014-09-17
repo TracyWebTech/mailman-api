@@ -2,11 +2,11 @@
 import os
 import uuid
 
-from bottle import route, request, template
+from bottle import route, request, template, default_app
 from Mailman import Utils, Errors, Post, mm_cfg
 
-from members import Member
-from utils import parse_boolean, jsonify, get_mailinglist, get_timestamp
+from .members import Member
+from .utils import parse_boolean, jsonify, get_mailinglist, get_timestamp
 
 
 CWD = os.path.abspath(os.path.dirname(__file__))
@@ -108,3 +108,15 @@ def sendmail(listname):
     Post.inject(listname, email.encode('utf8'), qdir=mm_cfg.INQUEUE_DIR)
     return jsonify(True)
 
+
+def get_application(allowed_ips):
+    bottle_app = default_app()
+    def application(environ, start_response):
+        if environ['REMOTE_ADDR'] not in allowed_ips:
+            status = '403 FORBIDDEN'
+            headers = [('Content-type', 'text/plain')]
+            start_response(status, headers)
+            return 'FORBIDDEN'
+
+        return bottle_app(environ, start_response)
+    return application
