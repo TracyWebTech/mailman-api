@@ -7,6 +7,7 @@ setup(
     author='Sergio Oliveira',
     author_email='sergio@tracy.com.br',
     packages=['mailmanapi'],
+    package_data={'mailmanapi': ['templates/*']},
     scripts=['scripts/mailman-api.py'],
     url='http://pypi.python.org/pypi/mailman-api/',
     license='LICENSE.txt',
