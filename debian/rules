@@ -1,0 +1,9 @@
+override_dh_auto_build:
+	dh_auto_build
+	rst2man README.rst mailman-api.1
+	cp init/sysv/mailman-api debian/mailman-api.init
+
+override_dh_auto_clean:
+	dh_auto_clean
+	$(RM) mailman-api.1
+	$(RM) debian/mailman-api.init

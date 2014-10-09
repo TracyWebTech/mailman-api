@@ -1,0 +1,6 @@
+Source: mailman-api
+Maintainer: Antonio Terceiro <terceiro@debian.org>
+X-Debdry-Build-Depends: python-docutils
+
+Package: mailman-api
+X-Debdry-Depends: mailman
