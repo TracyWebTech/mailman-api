@@ -1,5 +1,7 @@
 Source: mailman-api
 Maintainer: Antonio Terceiro <terceiro@debian.org>
+Vcs-Git: https://github.com/TracyWebTech/mailman-api.git -b debian
+Vcs-Browser: https://github.com/TracyWebTech/mailman-api
 X-Debdry-Build-Depends: python-docutils
 
 Package: mailman-api
