@@ -1,0 +1,219 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "MAILMAN-API" "1" "October 15, 2014" "0.2.3" "mailman-api"
+.SH NAME
+mailman-api \- mailman-api Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+Release v0.2.3
+.sp
+mailman\-api provides a daemon that will listen to HTTP requests,
+providing access to a REST API that can be used to interact with a
+locally\-installed Mailman (version 2) instance.
+.sp
+mailman\-api is tested with Python 2.7 and depends on:
+.INDENT 0.0
+.IP \(bu 2
+paste >= 1.7
+.IP \(bu 2
+bottle >= 0.11.6
+.UNINDENT
+.sp
+mailman\-api is a work in progress. Contributions are welcome. Feel free to fork and contribute!
+.SH QUICKSTART
+.SS Installation
+.SS Pip
+.sp
+You can use pip to install mailman\-api and requirements:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ pip install mailman\-api
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Distro Packages
+.sp
+We are currently working to provide linux packages (deb and rpm). Stay tunned!
+.SS Running the Sevice
+.sp
+To start the service manually just run the \fImailman\-api\fP command.
+.sp
+If you installed mailman\-api from a distribution package you should be able to start your service by running \fIservice mailman\-api start\fP\&.
+.sp
+Usage: mailman\-api [options]
+.INDENT 0.0
+.TP
+.B Options:
+.INDENT 7.0
+.TP
+.B \-h\fP,\fB  \-\-help
+show this help message and exit
+.TP
+.BI \-b \ BIND\fP,\fB \ \-\-bind\fB= BIND
+Bind address. Default: \(aq127.0.0.1:8000\(aq.
+.TP
+.BI \-\-allow\-from\fB= ALLOW_FROM
+IPs to allow incoming requests. By deufalt only allow
+connections from \(aq127.0.0.1\(aq.
+.TP
+.BI \-l \ MAILMANLIB_PATH\fP,\fB \ \-\-mailman\-lib\-path\fB= MAILMANLIB_PATH
+Path to mailman libs directory. Default:
+\(aq/usr/lib/mailman\(aq.
+.TP
+.B \-d\fP,\fB  \-\-debug
+Print debug information
+.UNINDENT
+.UNINDENT
+.SH API DOCUMENTATION
+.sp
+Requests can be made to any of the URI\(aqs below, strictly using the HTTP methods indicated.
+.sp
+The body of all responses contains valid JSON objects. Unless otherwise noted, successful requests get as response a 200 (OK) status code for response, and true in the response body. Failed requests will get responses with some HTTP error code in the 400s, and a string describing the problem in the response body.
+.sp
+Supported methods:
+.INDENT 0.0
+.TP
+.B mailmanapi.api.list_lists()
+Lists existing mailing lists on the server.
+.sp
+\fBMethod\fP: GET
+.sp
+\fBURI\fP: /
+.sp
+Returns a list of the mailing lists that exist on this server.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B mailmanapi.api.members(listname)
+Lists subscribers for the \fIlistname\fP list.
+.sp
+\fBMethod\fP: GET
+.sp
+\fBURI\fP: /<listname>
+.sp
+Returns an array of email addresses.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B mailmanapi.api.sendmail(listname)
+Posts an email to the mailing list.
+.sp
+\fBMethod\fP: POST
+.sp
+\fBURI\fP: /<listname>/sendmail
+.sp
+\fBParameters\fP:
+.INDENT 7.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+\fIname_from\fP: name of the poster
+.IP \(bu 2
+\fIemail_from\fP: email address of the poster
+.IP \(bu 2
+\fIsubject\fP: the subject of the message
+.IP \(bu 2
+\fIbody\fP: the body of the message.
+.IP \(bu 2
+\fIin_reply_to\fP (optional): Message\-ID of the message that is being
+replied to, if any.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B mailmanapi.api.subscribe(listname)
+Adds a new subscriber to the list called \fI<listname>\fP
+.sp
+\fBMethod\fP: PUT
+.sp
+\fBURI\fP: /<listname>
+.sp
+\fBParameters\fP:
+.INDENT 7.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+\fIaddress\fP: email address that is to be subscribed to the list.
+.IP \(bu 2
+\fIfullname\fP: full name of the person being subscribed to the list.
+.IP \(bu 2
+\fIdigest\fP: if this equals \fItrue\fP, the new subscriber will receive
+digests instead of every mail sent to the list.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B mailmanapi.api.unsubscribe(listname)
+Unsubsribe an email address from the mailing list.
+.sp
+\fBMethod\fP: DELETE
+.sp
+\fBURI\fP: /<listname>
+.sp
+\fBParameters\fP:
+.INDENT 7.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+\fIaddress\fP: email address that is to be unsubscribed from the list
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH LICENSING INFORMATION
+.sp
+Copyright (C) 2013\-2014 Sergio Oliveira Campos
+.sp
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+.sp
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+.sp
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110\-1301 USA.
+.SH AUTHOR
+Sergio Oliveira
+.SH COPYRIGHT
+2014, Sergio Oliveira Campos
+.\" Generated by docutils manpage writer.
+.
