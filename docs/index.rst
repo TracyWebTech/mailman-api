@@ -19,3 +19,4 @@ mailman-api is a work in progress. Contributions are welcome. Feel free to fork 
 
    install
    api
+   license
