@@ -1,9 +1,14 @@
 
 import os
 import uuid
+import logging
 
 from bottle import route, request, template, default_app
-from Mailman import Utils, Errors, Post, mm_cfg
+
+try:
+    from Mailman import Utils, Errors, Post, mm_cfg
+except ImportError:
+    logging.error('Could not import Mailman module')
 
 from .members import Member
 from .utils import parse_boolean, jsonify, get_mailinglist, get_timestamp
