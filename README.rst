@@ -75,7 +75,7 @@ Supported methods:
 
 * `DELETE /<listname>`
 
-  Unsubsribe someone from the mailing list.
+  Unsubsribe an email address from the mailing list.
 
   Arguments:
 
