@@ -17,6 +17,6 @@ mailman-api is a work in progress. Contributions are welcome. Feel free to fork 
 .. toctree::
    :maxdepth: 2
 
-   install
+   quickstart
    api
    license
