@@ -1,9 +1,16 @@
 
+
 import json
+import logging
 
 from time import strftime
+
 from bottle import HTTPResponse
-from Mailman import MailList, Errors
+
+try:
+    from Mailman import MailList, Errors
+except ImportError:
+    logging.error('Could not import Mailman module')
 
 
 def parse_boolean(value):
@@ -29,4 +36,3 @@ def get_mailinglist(listname, lock=True):
 
 def get_timestamp():
     return strftime('%a, %d %b %Y %H:%M:%S %z (%Z)')
-

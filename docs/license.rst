@@ -1,20 +1,7 @@
-mailman-api
-===========
+Licensing Information
+=====================
 
-`mailman-api` provides a daemon that will listen to HTTP requests,
-providing access to a REST API that can be used to interact with a
-locally-installed Mailman instance.
-
-Documentation
---------------
-
-Documentation available at: http://mailman-api.readthedocs.org/
-
-
-Licensing information
----------------------
-
-Copyright (C) 2013-2014 Sergio Oliveira
+Copyright (C) 2013-2014 Sergio Oliveira Campos 
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
