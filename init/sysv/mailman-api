@@ -17,6 +17,8 @@ NAME=mailman-api
 DAEMON=/usr/bin/$NAME
 PIDFILE=/var/run/${NAME}.pid
 
+. /lib/lsb/init-functions
+
 do_start() {
   start-stop-daemon --start --exec $DAEMON --pidfile $PIDFILE --make-pidfile --name $NAME --background
 }
