@@ -2,3 +2,4 @@ recursive-include mailmanapi/templates *
 include requirements.txt
 include stdeb.cfg
 recursive-include init *
+recursive-include docs *
