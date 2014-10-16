@@ -1,6 +1,7 @@
-recursive-include mailmanapi/templates *
 include requirements.txt
 include stdeb.cfg
+include docs/conf.py
+include docs/Makefile
+recursive-include docs *.rst
 recursive-include init *
-recursive-include docs *
-recursive-exclude docs/_build *
+recursive-include mailmanapi/templates *
