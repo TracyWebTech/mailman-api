@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='mailman-api',
-    version='0.2.3',
+    version='0.2.4',
     author='Sergio Oliveira',
     author_email='sergio@tracy.com.br',
     packages=['mailmanapi'],
