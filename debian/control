@@ -2,7 +2,11 @@ Source: mailman-api
 Maintainer: Antonio Terceiro <terceiro@debian.org>
 Vcs-Git: https://github.com/TracyWebTech/mailman-api.git -b debian
 Vcs-Browser: https://github.com/TracyWebTech/mailman-api
-X-Debdry-Build-Depends: python-docutils, dh-python
+X-Debdry-Build-Depends: python-sphinx, dh-python
 
 Package: mailman-api
 X-Debdry-Depends: mailman
+Description: REST API daemon to interact with Mailman 2
+ mailman-api provides a daemon that will listen to HTTP requests,
+ providing access to a REST API that can be used to interact with a
+ locally-installed Mailman instance.

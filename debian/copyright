@@ -24,6 +24,6 @@ Comment:
 
 Files: debian/*
 Copyright: 2014 Antonio Terceiro <terceiro@debian.org>
-License:
+License: GPL-2+
  The Debian packaging is licensed under the same terms as the original package.
 
