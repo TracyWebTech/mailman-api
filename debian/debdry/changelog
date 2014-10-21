@@ -1,0 +1,5 @@
+mailman-api (0.2.7-1) unstable; urgency=medium
+
+  * Initial release. (Closes: #765382)
+
+ -- Antonio Terceiro <terceiro@debian.org>  Thu, 16 Oct 2014 14:11:33 -0300
