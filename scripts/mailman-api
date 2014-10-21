@@ -4,7 +4,7 @@ import sys
 
 from optparse import OptionParser
 
-from bottle import run
+from bottle import run, debug
 
 
 def parse_options():
@@ -38,4 +38,5 @@ if __name__ == '__main__':
 
     host, port = opt.bind.split(':')
 
-    run(application, host=host, port=port, debug=opt.debug, server='paste')
+    debug(opt.debug)
+    run(application, host=host, port=port, server='paste')
