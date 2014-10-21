@@ -1,3 +1,9 @@
+mailman-api (0.2.8-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Antonio Terceiro <terceiro@debian.org>  Tue, 21 Oct 2014 17:18:19 -0200
+
 mailman-api (0.2.7-1) unstable; urgency=medium
 
   * Initial release. (Closes: #765382)
