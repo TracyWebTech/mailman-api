@@ -25,10 +25,22 @@ fi
 
 test -x "$DAEMON" || exit
 
+if [ -z "$DEAMON_USER" ]; then
+  if [ -d /var/lib/mailman/archives/private ]; then
+    DAEMON_USER=$(stat -c %U /var/lib/mailman/archives/private)
+  else
+    if id list >/dev/null 2>&1; then
+      DAEMON_USER=list
+    else
+      DAEMON_USER=mailman
+    fi
+  fi
+fi
+
 . /lib/lsb/init-functions
 
 do_start() {
-  start-stop-daemon --start --exec $DAEMON --pidfile $PIDFILE --make-pidfile --name $NAME --background -- $OPTIONS
+  start-stop-daemon --start --exec $DAEMON --pidfile $PIDFILE --make-pidfile --name $NAME --user $DAEMON_USER --background -- $OPTIONS
 }
 
 do_stop() {
