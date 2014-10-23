@@ -1,0 +1,9 @@
+The sources of this package are managed with debdry. This means that the git
+repository does contain a full debian/ directory, but only the bits that are
+needed on top of the auto-debianisation done by stdeb, which is called by
+debdry for Python packages.
+
+To build, you can use the git-debdry-build helper provided with debdry >= 0.2.
+See git-debdry-build(1) for details on how it works.
+
+ -- Antonio Terceiro <terceiro@debian.org>  Thu, 16 Oct 2014 13:30:00 -0300

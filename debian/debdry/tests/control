@@ -1,0 +1,2 @@
+Test-Command: wget -O - -S http://localhost:8000 2>&1
+Depends: @, wget
