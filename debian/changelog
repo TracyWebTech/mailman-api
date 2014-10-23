@@ -1,8 +1,9 @@
-mailman-api (0.2.9-1) UNRELEASED; urgency=medium
+mailman-api (0.2.9-1) unstable; urgency=medium
 
   * New upstream release
+    - runs the daemon as the same user as mailman (list in Debian)
 
- -- Antonio Terceiro <terceiro@debian.org>  Tue, 21 Oct 2014 17:18:19 -0200
+ -- Antonio Terceiro <terceiro@debian.org>  Thu, 23 Oct 2014 14:37:21 -0200
 
 mailman-api (0.2.7-1) unstable; urgency=medium
 
