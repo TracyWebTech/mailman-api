@@ -1,0 +1,11 @@
+[Unit]
+Description=Mailman REST API
+
+[Service]
+User=mailman
+ExecStart=/usr/bin/mailman-api
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
