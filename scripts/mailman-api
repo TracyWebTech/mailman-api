@@ -9,8 +9,8 @@ from bottle import run
 
 def parse_options():
     parser = OptionParser()
-    parser.add_option("-b", "--bind", dest="bind", default='127.0.0.1:8000',
-                      help="Bind address. Default: '127.0.0.1:8000'.")
+    parser.add_option("-b", "--bind", dest="bind", default='127.0.0.1:8124',
+                      help="Bind address. Default: '127.0.0.1:8124'.")
     parser.add_option("--allow-from", action="append",
                       default=['127.0.0.1'], dest="allow_from",
                       help=("IPs to allow incoming requests. By deufalt only "

@@ -37,7 +37,7 @@ Usage: mailman-api [options]
 
 Options:
   -h, --help            show this help message and exit
-  -b BIND, --bind=BIND  Bind address. Default: '127.0.0.1:8000'.
+  -b BIND, --bind=BIND  Bind address. Default: '127.0.0.1:8124'.
   --allow-from=ALLOW_FROM
                         IPs to allow incoming requests. By deufalt only allow
                         connections from '127.0.0.1'.
