@@ -43,7 +43,7 @@ def list_lists():
             if include_description:
                 list_values.append(mlist.description.decode('latin1'))
             if include_private:
-                list_values.append(mlist.archive_private)
+                list_values.append(bool(mlist.archive_private))
 
             if len(list_values) == 1:
                 lists.append(list_values[0])
