@@ -32,16 +32,23 @@ def list_lists():
     lists = []
 
     include_description = request.query.get('description')
+    include_private = request.query.get('private')
 
     address = request.query.get('address')
     for listname in all_lists:
         mlist = get_mailinglist(listname, lock=False)
         members = mlist.getMembers()
         if not address or address in members:
+            list_values = [listname]
             if include_description:
-                lists.append((listname, mlist.description.decode('latin1')))
+                list_values.append(mlist.description.decode('latin1'))
+            if include_private:
+                list_values.append(bool(mlist.archive_private))
+
+            if len(list_values) == 1:
+                lists.append(list_values[0])
             else:
-                lists.append(listname)
+                lists.append(list_values)
 
     return jsonify(lists)
 
