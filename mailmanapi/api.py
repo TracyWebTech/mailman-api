@@ -78,7 +78,7 @@ def subscribe(listname):
     userdesc = Member(fullname, address, digest)
 
     try:
-        mlist.ApprovedAddMember(userdesc, ack=True, admin_notif=True)
+        mlist.AddMember(userdesc)
     except Errors.MMAlreadyAMember:
         return jsonify("Address already a member.", 409)
     except Errors.MembershipIsBanned:
