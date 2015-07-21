@@ -77,21 +77,25 @@ def subscribe(listname):
     mlist = get_mailinglist(listname)
     userdesc = Member(fullname, address, digest)
 
+    result = jsonify(True)
+
     try:
         mlist.AddMember(userdesc)
+    except Errors.MMSubscribeNeedsConfirmation:
+        result = jsonify("Subscription confirmation is required.", 409)
     except Errors.MMAlreadyAMember:
-        return jsonify("Address already a member.", 409)
+        result = jsonify("Address already a member.", 409)
     except Errors.MembershipIsBanned:
-        return jsonify("Banned address.", 403)
+        result = jsonify("Banned address.", 403)
     except (Errors.MMBadEmailError, Errors.MMHostileAddress):
-        return jsonify("Invalid address.", 400)
+        result = jsonify("Invalid address.", 400)
 
     else:
         mlist.Save()
     finally:
         mlist.Unlock()
 
-    return jsonify(True)
+    return result
 
 
 @route('/<listname>', method='DELETE')
