@@ -6,7 +6,7 @@ import logging
 from bottle import route, request, template, default_app
 
 try:
-    from Mailman import Utils, Errors, Post, mm_cfg
+    from Mailman import Utils, Errors, Post, mm_cfg, UserDesc
 except ImportError:
     logging.error('Could not import Mailman module')
 
@@ -75,24 +75,23 @@ def subscribe(listname):
     digest = parse_boolean(request.forms.get('digest'))
 
     mlist = get_mailinglist(listname)
-    userdesc = Member(fullname, address, digest)
-
-    result = jsonify(True)
+    userdesc = UserDesc.UserDesc(address, fullname, digest=digest)
+    result = jsonify('Subscription succeeded!')
 
     try:
         mlist.AddMember(userdesc)
     except Errors.MMSubscribeNeedsConfirmation:
-        result = jsonify("Subscription confirmation is required.", 409)
+        result = jsonify("A confirmation was sent to you, please check your email.")
+    except Errors.MMNeedApproval:
+        result = jsonify("Your subscription was sent successfully! Please wait for the list's admin approval.")
     except Errors.MMAlreadyAMember:
-        result = jsonify("Address already a member.", 409)
+        result = jsonify("You are already a member of this list.")
     except Errors.MembershipIsBanned:
-        result = jsonify("Banned address.", 403)
+        result = jsonify("You are banned from this list!")
     except (Errors.MMBadEmailError, Errors.MMHostileAddress):
-        result = jsonify("Invalid address.", 400)
-
-    else:
-        mlist.Save()
+        result = jsonify("Invalid address.")
     finally:
+        mlist.Save()
         mlist.Unlock()
 
     return result
