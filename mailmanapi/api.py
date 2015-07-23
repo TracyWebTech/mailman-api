@@ -113,16 +113,17 @@ def unsubscribe(listname):
 
     address = request.forms.get('address')
     mlist = get_mailinglist(listname)
+    result = jsonify('Unsubscription succeeded!')
 
     try:
         mlist.ApprovedDeleteMember(address, admin_notif=False, userack=True)
         mlist.Save()
     except Errors.NotAMemberError:
-        return jsonify("Not a member.", 404)
+        result = jsonify("Not a member.")
     finally:
         mlist.Unlock()
 
-    return jsonify(True)
+    return result
 
 
 @route('/<listname>', method='GET')
