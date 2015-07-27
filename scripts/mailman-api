@@ -2,9 +2,8 @@
 
 import sys
 
-from optparse import OptionParser
-
 from bottle import run
+from optparse import OptionParser
 
 
 def parse_options():
@@ -32,10 +31,9 @@ if __name__ == '__main__':
     # Add mailman to path
     #   Must be done before importing get_application
     sys.path.append(opt.mailmanlib_path)
+    from mailmanapi import routes
 
-    import mailmanapi.apiv2
-    from mailmanapi.api import get_application
-    application = get_application(opt.allow_from)
+    application = routes.get_application(opt.allow_from)
 
     host, port = opt.bind.split(':')
 
