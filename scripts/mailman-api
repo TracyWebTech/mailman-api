@@ -33,6 +33,7 @@ if __name__ == '__main__':
     #   Must be done before importing get_application
     sys.path.append(opt.mailmanlib_path)
 
+    import mailmanapi.apiv2
     from mailmanapi.api import get_application
     application = get_application(opt.allow_from)
 

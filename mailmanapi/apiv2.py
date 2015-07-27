@@ -6,7 +6,7 @@ import logging
 from bottle import route, request, template, default_app
 
 try:
-    from Mailman import Utils, Errors, Post, mm_cfg
+    from Mailman import Utils, Errors, Post, mm_cfg, UserDesc
 except ImportError:
     logging.error('Could not import Mailman module')
 
@@ -16,10 +16,11 @@ from .utils import parse_boolean, jsonify, get_mailinglist, get_timestamp
 
 CWD = os.path.abspath(os.path.dirname(__file__))
 EMAIL_TEMPLATE = os.path.join(CWD, 'templates', 'message.tpl')
+API_VERSION = '/v2'
 
 
-@route('/', method='GET')
-def list_lists():
+@route(API_VERSION + '/', method='GET')
+def list_listsv2():
     """Lists existing mailing lists on the server.
 
     **Method**: GET
@@ -53,8 +54,8 @@ def list_lists():
     return jsonify(lists)
 
 
-@route('/<listname>', method='PUT')
-def subscribe(listname):
+@route(API_VERSION + '/<listname>', method='PUT')
+def subscribev2(listname):
     """Adds a new subscriber to the list called `<listname>`
 
     **Method**: PUT
@@ -75,27 +76,30 @@ def subscribe(listname):
     digest = parse_boolean(request.forms.get('digest'))
 
     mlist = get_mailinglist(listname)
-    userdesc = Member(fullname, address, digest)
+    userdesc = UserDesc.UserDesc(address, fullname, digest=digest)
+    result = jsonify('Subscription succeeded!')
 
     try:
         mlist.AddMember(userdesc)
+    except Errors.MMSubscribeNeedsConfirmation:
+        result = jsonify("A confirmation was sent to you, please check your email.")
+    except Errors.MMNeedApproval:
+        result = jsonify("Your subscription was sent successfully! Please wait for the list's admin approval.")
     except Errors.MMAlreadyAMember:
-        return jsonify("Address already a member.", 409)
+        result = jsonify("You are already a member of this list.")
     except Errors.MembershipIsBanned:
-        return jsonify("Banned address.", 403)
+        result = jsonify("You are banned from this list!")
     except (Errors.MMBadEmailError, Errors.MMHostileAddress):
-        return jsonify("Invalid address.", 400)
-
-    else:
-        mlist.Save()
+        result = jsonify("Invalid address.")
     finally:
+        mlist.Save()
         mlist.Unlock()
 
-    return jsonify(True)
+    return result
 
 
-@route('/<listname>', method='DELETE')
-def unsubscribe(listname):
+@route(API_VERSION + '/<listname>', method='DELETE')
+def unsubscribev2(listname):
     """Unsubsribe an email address from the mailing list.
 
     **Method**: DELETE
@@ -110,20 +114,21 @@ def unsubscribe(listname):
 
     address = request.forms.get('address')
     mlist = get_mailinglist(listname)
+    result = jsonify('Unsubscription succeeded!')
 
     try:
         mlist.ApprovedDeleteMember(address, admin_notif=False, userack=True)
         mlist.Save()
     except Errors.NotAMemberError:
-        return jsonify("Not a member.", 404)
+        result = jsonify("Not a member.")
     finally:
         mlist.Unlock()
 
-    return jsonify(True)
+    return result
 
 
-@route('/<listname>', method='GET')
-def members(listname):
+@route(API_VERSION + '/<listname>', method='GET')
+def membersv2(listname):
     """Lists subscribers for the `listname` list.
 
     **Method**: GET
@@ -136,8 +141,8 @@ def members(listname):
     return jsonify(mlist.getMembers())
 
 
-@route('/<listname>/sendmail', method='POST')
-def sendmail(listname):
+@route(API_VERSION + '/<listname>/sendmail', method='POST')
+def sendmailv2(listname):
     """Posts an email to the mailing list.
 
     **Method**: POST
