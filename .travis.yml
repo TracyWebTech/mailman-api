@@ -1,0 +1,17 @@
+language: python
+
+sudo: false
+
+python:
+  - "2.7"
+
+install:
+  - pip install nosetests flake8 coveralls
+  - pip install .
+
+script:
+  - python setup.py nosetest
+  - flake8 colab
+
+after_success:
+  - coveralls
