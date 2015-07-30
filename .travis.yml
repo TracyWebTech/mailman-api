@@ -11,7 +11,7 @@ install:
 
 script:
   - python setup.py nosetests
-  - flake8 colab
+  - flake8 mailmanapi
 
 after_success:
   - coveralls
