@@ -19,6 +19,10 @@ def find_version(*file_paths):
     raise RuntimeError("Unable to find version string.")
 
 
+TEST_REQUIREMENTS = [
+    'WebTest',
+]
+
 setup(
     name='mailman-api',
     version=find_version('mailmanapi/__init__.py'),
@@ -35,4 +39,5 @@ setup(
         "Paste >= 1.7.5.1",
         "bottle >= 0.11.6",
     ],
+    tests_require=TEST_REQUIREMENTS,
 )
