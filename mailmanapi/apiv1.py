@@ -3,7 +3,7 @@ import os
 import uuid
 import logging
 
-from bottle import route, request, template, default_app
+from bottle import request, template
 
 try:
     from Mailman import Utils, Errors, Post, mm_cfg
