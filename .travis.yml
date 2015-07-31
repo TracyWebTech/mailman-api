@@ -2,6 +2,9 @@ language: python
 
 sudo: false
 
+env:
+  PYTHONPATH=/usr/lib/mailman
+
 addons:
   apt:
     packages:
