@@ -2,6 +2,11 @@ language: python
 
 sudo: false
 
+addons:
+  apt:
+    packages:
+    - mailman
+
 python:
   - "2.7"
 
