@@ -10,5 +10,4 @@ test:
   override:
     - tests/run.sh
   post:
-    - pip install coveralls
-    - coveralls
+    - docker run -e "COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN" -w /srv/mailman-api -v $DIR/../:/srv/mailman-api tracywebtech/mailman-api
