@@ -7,7 +7,7 @@ from bottle import request, template
 
 try:
     from Mailman import Utils, Errors, Post, mm_cfg
-except ImportError:
+except ImportError:  # pragma: no cover
     logging.error('Could not import Mailman module')
 
 from .members import Member
