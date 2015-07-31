@@ -7,7 +7,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
 
-RUN apt-get install -y mailman
+RUN apt-get install -y mailman python-pip python-nose
+
+RUN pip install coverage flake8
 
 RUN /usr/lib/mailman/bin/newlist public public@example.com 12345
 
