@@ -3,6 +3,12 @@ machine:
   services:
     - docker
 
+dependencies:
+  override:
+
 test:
   override:
     - tests/run.sh
+  post:
+    - pip install coveralls
+    - coveralls
