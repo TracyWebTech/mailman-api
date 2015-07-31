@@ -14,12 +14,12 @@ def create_routes(app):
     app.route('/<listname>/sendmail', method='POST', callback=apiv1.sendmail)
 
     # v2
-    #app.route('/v2/', method='GET', callback=apiv1.list_lists)
+    # app.route('/v2/', method='GET', callback=apiv1.list_lists)
     app.route('/v2/<listname>', method='PUT', callback=apiv2.subscribe)
     app.route('/v2/<listname>', method='DELETE', callback=apiv2.unsubscribe)
-    #app.route('/v2/<listname>', method='GET', callback=apiv1.members)
-    #app.route('/v2/<listname>/sendmail', method='POST',
-    #          callback=apiv1.sendmail)
+    # app.route('/v2/<listname>', method='GET', callback=apiv1.members)
+    # app.route('/v2/<listname>/sendmail', method='POST',
+    #           callback=apiv1.sendmail)
 
 
 def get_application(allowed_ips):
