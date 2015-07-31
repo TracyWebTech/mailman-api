@@ -9,7 +9,7 @@ RUN apt-get update
 
 RUN apt-get install -y mailman python-pip python-nose
 
-RUN pip install coverage flake8
+RUN pip install coverage flake8 coveralls
 
 RUN /usr/lib/mailman/bin/newlist public public@example.com 12345
 
