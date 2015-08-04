@@ -5,7 +5,7 @@ import logging
 from bottle import request, template
 
 try:
-    from Mailman import Utils, Errors, Post, mm_cfg, UserDesc
+    from Mailman import Utils, Errors, Post, mm_cfg, UserDesc, Defaults
 except ImportError:
     logging.error('Could not import Mailman module')
 
@@ -43,6 +43,9 @@ def list_lists():
 
     address = request.query.get('address')
     for listname in all_lists:
+        if listname == Defaults.MAILMAN_SITE_LIST:
+            continue
+
         mlist = get_mailinglist(listname, lock=False)
 
         members = mlist.getMembers()
