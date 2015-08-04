@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ "$(uname)" == 'Darwin' ]; then
+    eval "$(boot2docker shellinit)"
+fi
+
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 DOCKER_IMAGE="tracywebtech/mailman-api-test"
