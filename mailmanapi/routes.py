@@ -20,7 +20,7 @@ def create_routes(app):
 
     # v2
     app.route('/v2/lists/', method='GET',
-              callback=apiv1.list_lists)
+              callback=apiv2.list_lists)
     app.route('/v2/lists/<listname>', method='POST',
               callback=apiv2.create_list)
     app.route('/v2/subscribe/<listname>', method='PUT',

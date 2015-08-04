@@ -5,11 +5,12 @@ import logging
 from bottle import request, template
 
 try:
-    from Mailman import Errors, Post, mm_cfg, UserDesc
+    from Mailman import Utils, Errors, Post, mm_cfg, UserDesc
 except ImportError:
     logging.error('Could not import Mailman module')
 
-from .utils import parse_boolean, jsonify, get_mailinglist, get_timestamp
+from .utils import (parse_boolean, jsonify, get_mailinglist,
+        get_timestamp, get_public_attributes)
 
 
 CWD = os.path.abspath(os.path.dirname(__file__))
@@ -26,6 +27,32 @@ ERRORS_CODE = {
     'NotAMemberError': 7,
     'MissingInformation': 8,
 }
+
+
+def list_lists():
+    """Lists existing mailing lists on the server.
+
+    **Method**: GET
+
+    **URI**: /
+
+    Returns a list of the mailing lists that exist on this server."""
+
+    all_lists = Utils.list_names()
+    lists = []
+
+    address = request.query.get('address')
+    for listname in all_lists:
+        mlist = get_mailinglist(listname, lock=False)
+
+        members = mlist.getMembers()
+        if not address or address in members:
+            list_values = [listname]
+            list_values.append(get_public_attributes(mlist))
+
+            lists.append(list_values)
+
+    return jsonify(lists)
 
 
 def subscribe(listname):
