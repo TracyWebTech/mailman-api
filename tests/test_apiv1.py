@@ -1,12 +1,23 @@
 
-import subprocess
-
 from .utils import MailmanAPITestCase
 
 from Mailman import MailList, Utils
 
 
 class TestAPIv1(MailmanAPITestCase):
+
+    @classmethod
+    def setupClass(cls):
+        lists = [['public', 'public@example.com', 'Public List'],
+                 ['private', 'private@example.com', 'Private List'], ]
+
+        for l in lists:
+            cls.create_list(l[0], list_admin=l[1])
+
+            mList = MailList.MailList(l[0])
+            mList.description = l[2]
+            mList.Save()
+            mList.Unlock()
 
     def setUp(self):
         self.list_names = Utils.list_names()
