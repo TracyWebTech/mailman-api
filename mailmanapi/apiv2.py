@@ -39,9 +39,9 @@ def list_lists():
 
     **Method**: GET
 
-    **URI**: /
+    **URI**: /v2/
 
-    Returns a list of the mailing lists that exist on this server."""
+    Returns a list of dictionaries the mailing lists and its public attributes that exist on this server."""
 
     all_lists = Utils.list_names()
     lists = []
