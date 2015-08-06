@@ -8,4 +8,4 @@ test:
 	./run.sh
 
 image:
-	docker build --tag=tracywebtech/mailman-api .
+	docker build --tag=tracywebtech/mailman-api-test .
