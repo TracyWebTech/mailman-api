@@ -178,7 +178,7 @@ def sendmail(listname):
 
 
 def create_list(listname):
-    """Create an mail list.
+    """Create an email list.
 
     **Method**: POST
 
@@ -221,3 +221,19 @@ def create_list(listname):
     finally:
         mail_list.Unlock()
     return result
+
+
+def members(listname):
+    """Lists subscribers for the `listname` list.
+
+    **Method**: GET
+
+    **URI**: /members/<listname>
+
+    Returns an array of email addresses."""
+
+    try:
+        mlist = MailList.MailList(listname, lock=False)
+    except Errors.MMUnknownListError, e:
+        return jsonify(ERRORS_CODE[e.__class__.__name__])
+    return jsonify(mlist.getMembers())

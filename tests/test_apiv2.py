@@ -130,15 +130,14 @@ class TestAPIv2(MailmanAPITestCase):
     def test_sendmail_missing_information(self):
         list_name = 'list10'
         path = 'sendmail/'
-        data = {}
 
         self.create_list(list_name)
 
-        resp = self.client.post(self.url + path + list_name, data, expect_errors=True)
+        resp = self.client.post(self.url + path + list_name, expect_errors=True)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(8, resp.json)
 
-    def test_sendmail_unknown_invalid(self):
+    def test_sendmail_unknown_list(self):
         list_name = 'list11'
         path = 'sendmail/'
         data = {}
@@ -195,3 +194,27 @@ class TestAPIv2(MailmanAPITestCase):
         resp = self.client.post(self.url + path + list_name, data, expect_errors=True)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(0, resp.json)
+
+    def test_members(self):
+        list_name = 'list13'
+        path = 'members/'
+        userDesc = UserDesc.UserDesc(self.data['address'], 'fullname', 1)
+
+        self.create_list(list_name)
+
+        mList = MailList.MailList(list_name)
+        mList.AddMember(userDesc)
+        mList.Save()
+        mList.Unlock()
+
+        resp = self.client.get(self.url + path + list_name, expect_errors=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual([self.data['address']], resp.json)
+
+    def test_members_unknown_list(self):
+        list_name = 'list14'
+        path = 'members/'
+
+        resp = self.client.get(self.url + path + list_name, expect_errors=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(12, resp.json)

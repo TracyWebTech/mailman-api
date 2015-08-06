@@ -28,7 +28,7 @@ def create_routes(app):
     app.route('/v2/subscribe/<listname>', method='DELETE',
               callback=apiv2.unsubscribe)
     app.route('/v2/members/<listname>', method='GET',
-              callback=apiv1.members)
+              callback=apiv2.members)
     app.route('/v2/sendmail/<listname>', method='POST',
               callback=apiv2.sendmail)
 
