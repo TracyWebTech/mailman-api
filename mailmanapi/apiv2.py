@@ -5,7 +5,8 @@ import logging
 from bottle import request, template
 
 try:
-    from Mailman import Utils, Errors, Post, mm_cfg, UserDesc, Defaults
+    from Mailman import (Errors, Post, mm_cfg, UserDesc,
+                         MailList, Utils, Defaults)
 except ImportError:
     logging.error('Could not import Mailman module')
 
@@ -26,6 +27,9 @@ ERRORS_CODE = {
     'MMHostileAddress': 6,
     'NotAMemberError': 7,
     'MissingInformation': 8,
+    'BadListNameError': 9,
+    'AssertionError': 10,
+    'InvalidPassword': 11,
 }
 
 
@@ -63,7 +67,7 @@ def subscribe(listname):
 
     **Method**: PUT
 
-    **URI**: /<listname>
+    **URI**: /v2/subscribe/<listname>
 
     **Parameters**:
 
@@ -103,7 +107,7 @@ def unsubscribe(listname):
 
     **Method**: DELETE
 
-    **URI**: /<listname>
+    **URI**: /v2/subscribe/<listname>
 
     **Parameters**:
 
@@ -131,7 +135,7 @@ def sendmail(listname):
 
     **Method**: POST
 
-    **URI**: /<listname>/sendmail
+    **URI**: /v2/sendmail/<listname>
 
     **Parameters**:
 
@@ -168,5 +172,48 @@ def sendmail(listname):
     Post.inject(listname, email.encode('utf8'), qdir=mm_cfg.INQUEUE_DIR)
     return result
 
+
 def create_list(listname):
-    pass
+    """Create an mail list.
+
+    **Method**: POST
+
+    **URI**: /v2/lists/<listname>
+
+    **Parameters**:
+
+      * `admin`: email of list admin
+      * `password`: list admin password
+      * `subscription_policy`: 1) Confirm; 2) Approval; 3)Confirm and approval.
+      Default is Confirm (1)
+      * `archive_privacy`: 0) Public; 1) Private. Default is Public (0) """
+    admin = request.forms.get('admin')
+    password = request.forms.get('password')
+    subscription_policy = request.forms.get('subscription_policy')
+    archive_privacy = request.forms.get('archive_privacy')
+
+    if subscription_policy < 1 or subscription_policy > 3:
+        subscription_policy = 1
+
+    if archive_privacy < 0 or archive_privacy > 1:
+        archive_privacy = 0
+
+    result = jsonify(ERRORS_CODE['Ok'])
+
+    if password == '':
+        return jsonify(ERRORS_CODE['InvalidPassword'])
+    else:
+        password = Utils.sha_new(password).hexdigest()
+
+    mail_list = MailList.MailList()
+    try:
+        mail_list.Create(listname, admin, password)
+        mail_list.archive_private = archive_privacy
+        mail_list.subscribe_policy = subscription_policy
+        mail_list.Save()
+    except (Errors.BadListNameError, AssertionError,
+            Errors.MMBadEmailError), e:
+        result = jsonify(ERRORS_CODE[e.__class__.__name__])
+    finally:
+        mail_list.Unlock()
+    return result
