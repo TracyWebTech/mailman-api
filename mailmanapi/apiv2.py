@@ -167,3 +167,6 @@ def sendmail(listname):
     email = template(EMAIL_TEMPLATE, context)
     Post.inject(listname, email.encode('utf8'), qdir=mm_cfg.INQUEUE_DIR)
     return result
+
+def create_list(listname):
+    pass
