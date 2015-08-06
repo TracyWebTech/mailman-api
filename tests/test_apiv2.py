@@ -6,7 +6,8 @@ from time import strftime
 
 
 class TestAPIv2(MailmanAPITestCase):
-
+    name = 'Teste'
+    api_version = 'API V2'
     url = '/v2/'
     data = {'address' : 'user@email.com'}
 

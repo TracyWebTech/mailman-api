@@ -5,6 +5,8 @@ from Mailman import MailList, Utils
 
 
 class TestAPIv1(MailmanAPITestCase):
+    name = 'Test'
+    api_version = 'API V1'
 
     @classmethod
     def setupClass(cls):
@@ -20,6 +22,7 @@ class TestAPIv1(MailmanAPITestCase):
             mList.Unlock()
 
     def setUp(self):
+        super(TestAPIv1, self).setUp()
         self.list_names = Utils.list_names()
 
     def test_list_lists_bare(self):
