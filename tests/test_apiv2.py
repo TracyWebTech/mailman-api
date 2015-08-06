@@ -1,7 +1,7 @@
 
 
 from .utils import MailmanAPITestCase
-from Mailman import MailList, UserDesc
+from Mailman import MailList, UserDesc, Defaults
 
 
 class TestAPIv2(MailmanAPITestCase):
@@ -96,3 +96,15 @@ class TestAPIv2(MailmanAPITestCase):
         resp = self.client.delete(self.url + list_name, self.data, expect_errors=True)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(7, resp.json)
+
+    def test_mailman_site_list_not_listed_among_lists(self):
+        mailman_site_list = Defaults.MAILMAN_SITE_LIST
+
+        resp = self.client.get(self.url, expect_errors=True)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertIsInstance(resp.json, list)
+
+        for mlist in resp.json:
+            self.assertIsInstance(mlist, dict)
+            self.assertNotEqual(mlist.get("listname"), mailman_site_list)

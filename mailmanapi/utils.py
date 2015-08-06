@@ -22,7 +22,8 @@ def parse_boolean(value):
 
 def jsonify(body='', status=200):
     response = HTTPResponse(content_type='application/json')
-    response.body = json.dumps(body, default=lambda s: get_public_attributes(s))
+    response.body = json.dumps(body,
+                               default=lambda s: get_public_attributes(s))
     response.status = status
     return response
 

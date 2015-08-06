@@ -10,7 +10,7 @@ except ImportError:
     logging.error('Could not import Mailman module')
 
 from .utils import (parse_boolean, jsonify, get_mailinglist,
-        get_timestamp, get_public_attributes)
+                    get_timestamp, get_public_attributes)
 
 
 CWD = os.path.abspath(os.path.dirname(__file__))
@@ -50,8 +50,8 @@ def list_lists():
 
         members = mlist.getMembers()
         if not address or address in members:
-            list_values = [listname]
-            list_values.append(get_public_attributes(mlist))
+            list_values = get_public_attributes(mlist)
+            list_values["listname"] = listname
 
             lists.append(list_values)
 
