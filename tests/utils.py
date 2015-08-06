@@ -1,5 +1,6 @@
-
+import os
 import unittest
+import subprocess
 from sys import stderr
 from webtest import TestApp
 from mailmanapi.routes import get_application
@@ -48,3 +49,15 @@ class MailmanAPITestCase(unittest.TestCase):
         m.subscribe_policy = subscribe_policy
         m.Save()
         m.Unlock()
+
+    @classmethod
+    def remove_list(cls, list_name):
+        fnull = open(os.devnull, 'w')
+        subprocess.call(['/usr/lib/mailman/bin/rmlist', '-a', list_name],
+                        stdout=fnull, stderr=subprocess.STDOUT)
+
+    def change_list_attribute(self, attribute, value):
+        mlist = MailList.MailList(self.list_name)
+        setattr(mlist, attribute, value)
+        mlist.Save()
+        mlist.Unlock()
