@@ -5,7 +5,6 @@ from Mailman import MailList, Utils
 
 
 class TestAPIv1(MailmanAPITestCase):
-    name = 'Test'
     api_version = 'API V1'
 
     @classmethod
@@ -16,10 +15,10 @@ class TestAPIv1(MailmanAPITestCase):
         for l in lists:
             cls.create_list(l[0], list_admin=l[1])
 
-            mList = MailList.MailList(l[0])
-            mList.description = l[2]
-            mList.Save()
-            mList.Unlock()
+            mlist = MailList.MailList(l[0])
+            mlist.description = l[2]
+            mlist.Save()
+            mlist.Unlock()
 
     def setUp(self):
         super(TestAPIv1, self).setUp()
