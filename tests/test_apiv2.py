@@ -108,6 +108,8 @@ class TestAPIv2(MailmanAPITestCase):
         path = 'lists/'
         mailman_site_list = Defaults.MAILMAN_SITE_LIST
 
+        self.create_list(mailman_site_list)
+
         resp = self.client.get(self.url + path, expect_errors=True)
 
         self.assertEqual(resp.status_code, 200)
