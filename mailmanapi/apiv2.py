@@ -1,18 +1,11 @@
 import os
 import uuid
-import logging
-
-from bottle import request, template
-
-try:
-    from Mailman import (Errors, Post, mm_cfg, UserDesc,
-                         MailList, Utils, Defaults)
-except ImportError:
-    logging.error('Could not import Mailman module')
 
 from .utils import (parse_boolean, jsonify, get_mailinglist,
                     get_timestamp, get_public_attributes)
-
+from Mailman import (Errors, Post, mm_cfg, UserDesc,
+                     MailList, Utils, Defaults)
+from bottle import request, template
 
 CWD = os.path.abspath(os.path.dirname(__file__))
 EMAIL_TEMPLATE = os.path.join(CWD, 'templates', 'message.tpl')
@@ -31,6 +24,8 @@ ERRORS_CODE = {
     'AssertionError': 10,
     'InvalidPassword': 11,
     'MMUnknownListError': 12,
+    'MMListAlreadyExistsError': 13,
+    'InvalidParams': 14,
 }
 
 
@@ -189,19 +184,25 @@ def create_list(listname):
 
       * `admin`: email of list admin
       * `password`: list admin password
-      * `subscription_policy`: 1) Confirm; 2) Approval; 3)Confirm and approval.
+      * `subscribe_policy`: 1) Confirm; 2) Approval; 3)Confirm and approval.
       Default is Confirm (1)
-      * `archive_privacy`: 0) Public; 1) Private. Default is Public (0) """
+      * `archive_private`: 0) Public; 1) Private. Default is Public (0) """
     admin = request.forms.get('admin')
     password = request.forms.get('password')
-    subscription_policy = request.forms.get('subscription_policy')
-    archive_privacy = request.forms.get('archive_privacy')
+    subscribe_policy = request.forms.get('subscribe_policy', 1)
+    archive_private = request.forms.get('archive_private', 0)
 
-    if subscription_policy < 1 or subscription_policy > 3:
-        subscription_policy = 1
+    try:
+        subscribe_policy = int(subscribe_policy)
+        archive_private = int(archive_private)
+    except ValueError:
+        return jsonify(ERRORS_CODE['InvalidParams'])
 
-    if archive_privacy < 0 or archive_privacy > 1:
-        archive_privacy = 0
+    if subscribe_policy < 1 or subscribe_policy > 3:
+        subscribe_policy = 1
+
+    if archive_private < 0 or archive_private > 1:
+        archive_private = 0
 
     result = jsonify(ERRORS_CODE['Ok'])
 
@@ -213,11 +214,11 @@ def create_list(listname):
     mail_list = MailList.MailList()
     try:
         mail_list.Create(listname, admin, password)
-        mail_list.archive_private = archive_privacy
-        mail_list.subscribe_policy = subscription_policy
+        mail_list.archive_private = archive_private
+        mail_list.subscribe_policy = subscribe_policy
         mail_list.Save()
     except (Errors.BadListNameError, AssertionError,
-            Errors.MMBadEmailError), e:
+            Errors.MMBadEmailError, Errors.MMListAlreadyExistsError), e:
         result = jsonify(ERRORS_CODE[e.__class__.__name__])
     finally:
         mail_list.Unlock()
