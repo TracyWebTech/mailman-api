@@ -181,3 +181,16 @@ class TestAPIv2(MailmanAPITestCase):
                 found = True
 
         self.assertTrue(found)
+
+    def test_create_list(self):
+        list_name = 'list12'
+        path = 'lists/'
+        data = {}
+        data['admin'] = self.data['address']
+        data['password'] = '123456'
+        data['subscription_policy'] = 1
+        data['archive_privacy'] = 1
+
+        resp = self.client.post(self.url + path + list_name, data, expect_errors=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(0, resp.json)
