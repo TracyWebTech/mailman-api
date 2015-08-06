@@ -71,3 +71,28 @@ class TestAPIv2(MailmanAPITestCase):
         resp = self.client.put(self.url + list_name, data, expect_errors=True)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(5, resp.json)
+
+    def test_unsubscribe(self):
+        list_name = 'list6'
+
+        userDesc = UserDesc.UserDesc(self.data['address'], 'fullname', 1)
+
+        self.create_list(list_name)
+
+        mList = MailList.MailList(list_name)
+        mList.AddMember(userDesc)
+        mList.Save()
+        mList.Unlock()
+
+        resp = self.client.delete(self.url + list_name, self.data, expect_errors=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(0, resp.json)
+
+    def test_unsubscribe_not_member(self):
+        list_name = 'list7'
+
+        self.create_list(list_name)
+
+        resp = self.client.delete(self.url + list_name, self.data, expect_errors=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(7, resp.json)
