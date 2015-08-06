@@ -126,6 +126,26 @@ class TestAPIv2(MailmanAPITestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(0, resp.json)
 
+    def test_sendmail_missing_information(self):
+        list_name = 'list10'
+        path = 'sendmail/'
+        data = {}
+
+        self.create_list(list_name)
+
+        resp = self.client.post(self.url + path + list_name, data, expect_errors=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(8, resp.json)
+
+    def test_sendmail_unknown_invalid(self):
+        list_name = 'list11'
+        path = 'sendmail/'
+        data = {}
+
+        resp = self.client.post(self.url + path + list_name, data, expect_errors=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(12, resp.json)
+
     def test_mailman_site_list_not_listed_among_lists(self):
         path = 'lists/'
         mailman_site_list = Defaults.MAILMAN_SITE_LIST
