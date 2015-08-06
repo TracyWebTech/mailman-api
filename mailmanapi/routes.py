@@ -30,7 +30,7 @@ def create_routes(app):
     app.route('/v2/members/<listname>', method='GET',
               callback=apiv1.members)
     app.route('/v2/sendmail/<listname>', method='POST',
-              callback=apiv1.sendmail)
+              callback=apiv2.sendmail)
 
 
 def get_application(allowed_ips):

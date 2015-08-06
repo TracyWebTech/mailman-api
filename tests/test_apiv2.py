@@ -2,6 +2,7 @@
 
 from .utils import MailmanAPITestCase
 from Mailman import MailList, UserDesc, Defaults
+from time import strftime
 
 
 class TestAPIv2(MailmanAPITestCase):
@@ -103,6 +104,27 @@ class TestAPIv2(MailmanAPITestCase):
         resp = self.client.delete(self.url + path + list_name, self.data, expect_errors=True)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(7, resp.json)
+
+    def test_sendmail(self):
+        list_name = 'list9'
+        path = 'sendmail/'
+
+        self.create_list(list_name)
+
+        mlist = MailList.MailList(list_name)
+        data = {}
+        data['email_to'] = mlist.GetListEmail()
+        data['message_id'] = 1
+        data['ip_from'] = '127.0.0.1'
+        data['timestamp'] = strftime('%a, %d %b %Y %H:%M:%S %z (%Z)')
+        data['name_from'] = 'user test'
+        data['email_from'] = self.data['address']
+        data['subject'] = 'subject test'
+        data['body'] = 'body test'
+
+        resp = self.client.post(self.url + path + list_name, data, expect_errors=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(0, resp.json)
 
     def test_mailman_site_list_not_listed_among_lists(self):
         path = 'lists/'
