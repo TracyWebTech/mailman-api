@@ -104,7 +104,7 @@ def subscribe(listname):
 
 
 def unsubscribe(listname):
-    """Unsubsribe an email address from the mailing list.
+    """Unsubscribe an email address from the mailing list.
 
     **Method**: DELETE
 
@@ -228,7 +228,7 @@ def members(listname):
 
     **Method**: GET
 
-    **URI**: /members/<listname>
+    **URI**: /v2/members/<listname>
 
     Returns an array of email addresses."""
 

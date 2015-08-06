@@ -37,7 +37,7 @@ Adds a new subscriber to the list called `<listname>`
 
 unsubscribe
 +++++++++++
-Unsubsribe an email address from the mailing list.
+Unsubscribe an email address from the mailing list.
 
     **Method**: DELETE
 
@@ -119,7 +119,7 @@ Adds a new subscriber to the list called `<listname>`
 
 unsubscribe
 +++++++++++
-Unsubsribe an email address from the mailing list.
+Unsubscribe an email address from the mailing list.
 
     **Method**: DELETE
 
@@ -131,6 +131,13 @@ Unsubsribe an email address from the mailing list.
 
 members
 +++++++
+Lists subscribers for the `listname` list.
+
+    **Method**: GET
+
+    **URI**: /v2/members/<listname>
+
+    Returns an array of email addresses.
 
 sendmail
 ++++++++
