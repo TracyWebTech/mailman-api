@@ -140,3 +140,24 @@ class TestAPIv2(MailmanAPITestCase):
         for mlist in resp.json:
             self.assertIsInstance(mlist, dict)
             self.assertNotEqual(mlist.get("listname"), mailman_site_list)
+
+    def test_list_lists(self):
+        path = 'lists/'
+        listname = 'list8'
+
+        self.create_list(listname)
+
+        resp = self.client.get(self.url + path, expect_errors=True)
+        total_lists = len(resp.json)
+        found = False
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertIsInstance(resp.json, list)
+        self.assertGreaterEqual(total_lists, 1)
+
+        for mlist in resp.json:
+            self.assertIsInstance(mlist, dict)
+            if mlist.get("listname") == listname:
+                found = True
+
+        self.assertTrue(found)
