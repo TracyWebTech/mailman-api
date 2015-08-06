@@ -30,6 +30,7 @@ ERRORS_CODE = {
     'BadListNameError': 9,
     'AssertionError': 10,
     'InvalidPassword': 11,
+    'MMUnknownListError': 12,
 }
 
 
@@ -146,7 +147,10 @@ def sendmail(listname):
       * `in_reply_to` (optional): Message-ID of the message that is being
         replied to, if any."""
 
-    mlist = get_mailinglist(listname, lock=False)
+    try:
+        mlist = MailList.MailList(listname, lock=False)
+    except Errors.MMUnknownListError, e:
+        return jsonify(ERRORS_CODE[e.__class__.__name__])
 
     context = {}
     context['email_to'] = mlist.GetListEmail()
