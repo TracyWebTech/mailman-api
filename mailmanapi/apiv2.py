@@ -178,7 +178,7 @@ def sendmail(listname):
 
 
 def create_list(listname):
-    """Create an mail list.
+    """Create a mail list.
 
     **Method**: POST
 

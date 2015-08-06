@@ -88,7 +88,7 @@ Lists existing mailing lists on the server.
 
 create_list
 +++++++++++
-Create an mail list.
+Create a mail list.
 
     **Method**: POST
 
@@ -100,7 +100,7 @@ Create an mail list.
       * `password`: list admin password
       * `subscription_policy`: 1) Confirm; 2) Approval; 3)Confirm and approval.
       Default is Confirm (1)
-      * `archive_privacy`: 0) Public; 1) Private. Default is Public (0) 
+      * `archive_privacy`: 0) Public; 1) Private. Default is Public (0)
 
 subscribe
 +++++++++
