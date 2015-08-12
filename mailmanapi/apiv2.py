@@ -235,7 +235,7 @@ def members(listname):
     Returns an array of email addresses."""
 
     try:
-        mlist = MailList.MailList(listname, lock=False)
+        mlist = MailList.MailList(listname.lower(), lock=False)
     except Errors.MMUnknownListError, e:
         return jsonify(ERRORS_CODE[e.__class__.__name__])
     return jsonify(mlist.getMembers())
