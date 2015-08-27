@@ -1,0 +1,13 @@
+
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+
+test:
+  override:
+    - tests/run.sh
+  post:
+    - docker run -e "COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN" -w /srv/mailman-api -v $PWD:/srv/mailman-api tracywebtech/mailman-api-test coveralls

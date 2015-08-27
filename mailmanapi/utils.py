@@ -22,7 +22,8 @@ def parse_boolean(value):
 
 def jsonify(body='', status=200):
     response = HTTPResponse(content_type='application/json')
-    response.body = json.dumps(body)
+    response.body = json.dumps(body,
+                               default=lambda s: get_public_attributes(s))
     response.status = status
     return response
 
@@ -36,3 +37,13 @@ def get_mailinglist(listname, lock=True):
 
 def get_timestamp():
     return strftime('%a, %d %b %Y %H:%M:%S %z (%Z)')
+
+
+def get_public_attributes(target):
+    public_attrs = {}
+    target_vars = vars(target)
+    for key in target_vars.keys():
+        if not key.startswith('_'):
+            public_attrs.update({key: target_vars[key]})
+
+    return public_attrs

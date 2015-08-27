@@ -3,11 +3,11 @@ import os
 import uuid
 import logging
 
-from bottle import route, request, template, default_app
+from bottle import request, template
 
 try:
     from Mailman import Utils, Errors, Post, mm_cfg
-except ImportError:
+except ImportError:  # pragma: no cover
     logging.error('Could not import Mailman module')
 
 from .members import Member
@@ -18,7 +18,6 @@ CWD = os.path.abspath(os.path.dirname(__file__))
 EMAIL_TEMPLATE = os.path.join(CWD, 'templates', 'message.tpl')
 
 
-@route('/', method='GET')
 def list_lists():
     """Lists existing mailing lists on the server.
 
@@ -53,7 +52,6 @@ def list_lists():
     return jsonify(lists)
 
 
-@route('/<listname>', method='PUT')
 def subscribe(listname):
     """Adds a new subscriber to the list called `<listname>`
 
@@ -94,9 +92,8 @@ def subscribe(listname):
     return jsonify(True)
 
 
-@route('/<listname>', method='DELETE')
 def unsubscribe(listname):
-    """Unsubsribe an email address from the mailing list.
+    """Unsubscribe an email address from the mailing list.
 
     **Method**: DELETE
 
@@ -122,7 +119,6 @@ def unsubscribe(listname):
     return jsonify(True)
 
 
-@route('/<listname>', method='GET')
 def members(listname):
     """Lists subscribers for the `listname` list.
 
@@ -136,7 +132,6 @@ def members(listname):
     return jsonify(mlist.getMembers())
 
 
-@route('/<listname>/sendmail', method='POST')
 def sendmail(listname):
     """Posts an email to the mailing list.
 
@@ -177,17 +172,3 @@ def sendmail(listname):
     email = template(EMAIL_TEMPLATE, context)
     Post.inject(listname, email.encode('utf8'), qdir=mm_cfg.INQUEUE_DIR)
     return jsonify(True)
-
-
-def get_application(allowed_ips):
-    bottle_app = default_app()
-
-    def application(environ, start_response):
-        if environ['REMOTE_ADDR'] not in allowed_ips:
-            status = '403 FORBIDDEN'
-            headers = [('Content-type', 'text/plain')]
-            start_response(status, headers)
-            return 'FORBIDDEN'
-
-        return bottle_app(environ, start_response)
-    return application
