@@ -43,8 +43,8 @@ def get_timestamp():
 def get_public_attributes(target):
     public_attrs = {}
     target_vars = vars(target)
-    for key in target_vars.keys():
+    for key, value in target_vars.items():
         if not key.startswith('_'):
-            public_attrs.update({key: target_vars[key]})
+            public_attrs.update({key: value})
 
     return public_attrs
