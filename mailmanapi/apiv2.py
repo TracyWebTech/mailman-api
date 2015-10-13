@@ -1,8 +1,7 @@
 import os
 import uuid
 
-from .utils import (parse_boolean, jsonify, get_mailinglist,
-                    get_timestamp, get_public_attributes)
+from .utils import parse_boolean, jsonify, get_mailinglist, get_timestamp
 from Mailman import (Errors, Post, mm_cfg, UserDesc,
                      MailList, Utils, Defaults)
 from bottle import request, template
@@ -51,8 +50,12 @@ def list_lists():
 
         members = mlist.getMembers()
         if not address or address in members:
-            list_values = get_public_attributes(mlist)
-            list_values["listname"] = listname
+            list_values = {
+                'listname': listname,
+                'archive_private': mlist.archive_private,
+                'real_name': mlist.real_name,
+                'description': mlist.description,
+            }
 
             lists.append(list_values)
 
