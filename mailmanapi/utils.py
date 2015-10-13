@@ -20,9 +20,10 @@ def parse_boolean(value):
     return False
 
 
-def jsonify(body='', status=200):
+def jsonify(body, status=200):
     response = HTTPResponse(content_type='application/json')
     response.body = json.dumps(body,
+                               encoding='latin1',
                                default=lambda s: get_public_attributes(s))
     response.status = status
     return response
