@@ -4,7 +4,7 @@ import subprocess
 from sys import stderr
 from webtest import TestApp
 from mailmanapi.routes import get_application
-from Mailman import MailList
+from Mailman import MailList, Utils
 
 
 class MailmanAPITestCase(unittest.TestCase):
@@ -44,6 +44,9 @@ class MailmanAPITestCase(unittest.TestCase):
     @classmethod
     def create_list(cls, list_name, list_admin='admin@list.com',
                     list_pass='123456', subscribe_policy=0):
+        if list_name in Utils.list_names():
+            return
+
         m = MailList.MailList()
         m.Create(list_name, list_admin, list_pass)
         m.subscribe_policy = subscribe_policy
