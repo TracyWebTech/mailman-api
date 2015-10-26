@@ -18,6 +18,8 @@ def parse_options():
                       default='/usr/lib/mailman',
                       help=("Path to mailman libs directory. "
                             "Default: '/usr/lib/mailman'."))
+    parser.add_option("-w", "--workers", dest="workers",
+                      default=3, help="Number of workers. Default: 3")
     parser.add_option("-d", "--debug", action="store_true", default=False,
                       help="Print debug information")
 
@@ -37,4 +39,5 @@ if __name__ == '__main__':
 
     host, port = opt.bind.split(':')
 
-    run(application, host=host, port=port, debug=opt.debug, server='paste')
+    run(application, host=host, port=port, debug=opt.debug, server='gunicorn',
+        max_requests=1000, workers=opt.workers)

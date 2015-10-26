@@ -36,7 +36,7 @@ setup(
     description='REST API daemon to interact with Mailman 2',
     long_description=read('README.rst'),
     install_requires=[
-        "Paste >= 1.7.5.1",
+        "gunicorn >= 18.0",
         "bottle >= 0.11.6",
     ],
     tests_require=TEST_REQUIREMENTS,
